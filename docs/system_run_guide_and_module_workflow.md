@@ -26,7 +26,7 @@ Make sure the following are available on the machine:
 Open a terminal in the project root:
 
 ```powershell
-cd E:\Intership\WISE-09
+cd E:\Intership\PRESAGE-09
 ```
 
 ### Step 2: Install Backend Dependencies
@@ -48,7 +48,7 @@ What this step does:
 Install React frontend dependencies:
 
 ```powershell
-D:\Nodejs\Nodejs\npm.cmd --prefix frontend install
+npm --prefix frontend install
 ```
 
 What this step does:
@@ -58,12 +58,14 @@ What this step does:
 - installs Tailwind-related packages
 - installs frontend UI dependencies
 
-### Step 4: Build The Frontend
+### Step 4: Choose How You Want To Run The Frontend
+
+#### Option A: Integrated demo mode
 
 Build the production frontend:
 
 ```powershell
-D:\Nodejs\Nodejs\npm.cmd --prefix frontend run build
+npm --prefix frontend run build
 ```
 
 What this step does:
@@ -72,31 +74,38 @@ What this step does:
 - creates the `frontend/dist` output
 - makes the frontend available for Flask to serve
 
-### Step 5: Start The System
-
-Run the main application:
+Then start the system:
 
 ```powershell
 python app.py
 ```
 
-What this step does:
-
-- starts the Flask backend
-- exposes the API
-- serves the React frontend from the built files
-- starts background traffic generation
-- starts Windows event collection
-
-### Step 6: Open The Application
-
-Open the browser and visit:
+Open:
 
 ```text
 http://localhost:5000
 ```
 
-You will first see the landing page, then the main dashboard workspace after entering the application.
+#### Option B: Frontend development mode
+
+Start the backend:
+
+```powershell
+python app.py
+```
+
+In another terminal, start the React dev server:
+
+```powershell
+cd frontend
+npm run start
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
 
 ## Optional Way To Run The System
 
@@ -117,7 +126,7 @@ What this does:
 When `python app.py` starts the system, the following happen automatically:
 
 - Flask API becomes available
-- React frontend is served
+- React frontend is served in integrated mode
 - background benign traffic generation begins
 - Windows Event Viewer collection begins
 - attack detections remain active
@@ -158,7 +167,7 @@ Purpose:
 How it works:
 
 - registers API routes
-- serves frontend assets from `frontend/dist`
+- serves frontend assets from `frontend/dist` in integrated mode
 - starts runtime services before requests
 
 ### `backend/siem_engine.py`
@@ -268,7 +277,7 @@ How it works:
 
 - uses PowerShell `Get-WinEvent`
 - reads Application, System, and Security logs
-- normalizes them into the project’s `WindowsEvent` format
+- normalizes them into the project's `WindowsEvent` format
 - ingests them into the SIEM engine
 
 ### `backend/config.py`
@@ -478,4 +487,3 @@ The project is run through a simple startup process, but internally it is compos
 - playbook logic for simulated response
 
 This structure makes the project both runnable and explainable, which is important for a cybersecurity proof of concept.
-

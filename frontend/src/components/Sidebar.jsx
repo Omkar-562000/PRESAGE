@@ -48,10 +48,18 @@ function NavGroup({ title, items, query }) {
 
 export function Sidebar({ query, setQuery }) {
   return (
-    <aside className="flex h-full flex-col rounded-[28px] border border-white/10 bg-panel/90 p-4 shadow-panel backdrop-blur">
-      <Link to="/" className="rounded-[24px] border border-white/8 bg-slate-950/50 p-4 transition hover:border-sky/35 hover:bg-slate-950">
-        <p className="font-display text-2xl text-white">{APP_BRAND.name}</p>
-        <p className="mt-1 text-sm text-steel">{APP_BRAND.subtitle}</p>
+    <aside className="relative flex h-full flex-col overflow-hidden rounded-[32px] border border-white/10 bg-shell/85 p-4 shadow-panel backdrop-blur">
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-sky/60 to-transparent" />
+      <Link to="/" className="rounded-[26px] border border-white/8 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-shell/80 p-5 transition hover:border-sky/35 hover:bg-slate-950">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/20 via-cobalt/15 to-mint/10 text-lg font-semibold text-white shadow-float animate-pulse-glow">
+            PR
+          </div>
+          <div>
+            <p className="font-display text-2xl text-white">{APP_BRAND.name}</p>
+            <p className="mt-1 text-sm text-steel">{APP_BRAND.subtitle}</p>
+          </div>
+        </div>
       </Link>
 
       <div className="mt-4">
@@ -59,7 +67,7 @@ export function Sidebar({ query, setQuery }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search modules or pages"
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-sky/40"
+          className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-sky/40 focus:bg-slate-950"
         />
       </div>
 
