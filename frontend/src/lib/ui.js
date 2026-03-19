@@ -1,11 +1,13 @@
 export const APP_BRAND = {
   name: "Presage SIEM",
   subtitle: "Real-Time Threat Detection Platform",
+  motto: "Predict. Detect. Contain.",
 };
 
 export const ATTACKS = [
   {
     id: "brute_force",
+    code: "AUTH-01",
     title: "Brute Force Login",
     subtitle: "Credential attack simulation",
     description: "Triggers repeated failed sign-ins against the admin account and validates threshold-based detection.",
@@ -13,10 +15,13 @@ export const ATTACKS = [
     severity: "High",
     route: "/workspace/modules/brute-force",
     signal: "SigninLogs",
+    command: "Credential pressure",
+    risk: "Account compromise risk",
     logicSummary: "Counts repeated failed sign-ins from the same attacker pattern inside a five-minute window.",
   },
   {
     id: "privilege_escalation",
+    code: "CLOUD-07",
     title: "Privilege Escalation",
     subtitle: "Unauthorized role assignment",
     description: "Creates an Azure activity event that promotes a user to admin to prove immediate alerting.",
@@ -24,10 +29,13 @@ export const ATTACKS = [
     severity: "High",
     route: "/workspace/modules/privilege-escalation",
     signal: "AzureActivity",
+    command: "Privilege drift",
+    risk: "Administrative misuse risk",
     logicSummary: "Raises an alert as soon as a role assignment write action appears in privileged activity logs.",
   },
   {
     id: "windows_failed_logon",
+    code: "HOST-03",
     title: "Windows Failed Logon",
     subtitle: "Real Windows credential burst",
     description: "Uses Windows Event style failed logons to demonstrate host-level credential attack detection.",
@@ -35,10 +43,13 @@ export const ATTACKS = [
     severity: "High",
     route: "/workspace/modules/windows-failed-logon",
     signal: "WindowsEvent",
+    command: "Host authentication surge",
+    risk: "Endpoint credential abuse",
     logicSummary: "Counts repeated Windows failed logon events and opens a high-severity incident when a burst threshold is reached.",
   },
   {
     id: "port_scan",
+    code: "NET-12",
     title: "Port Scan",
     subtitle: "Reconnaissance activity",
     description: "Sweeps multiple ports from an external IP to demonstrate network discovery detection.",
@@ -46,15 +57,17 @@ export const ATTACKS = [
     severity: "Medium",
     route: "/workspace/modules/port-scan",
     signal: "NetworkEvents",
+    command: "Surface discovery",
+    risk: "Reconnaissance and exposure mapping",
     logicSummary: "Tracks distinct destination ports per source IP and triggers once the threshold is crossed in one minute.",
   },
 ];
 
 export const FEATURE_PAGES = [
-  { label: "Overview", route: "/workspace", description: "Executive summary and source health" },
-  { label: "Incidents", route: "/workspace/incidents", description: "Incident queue and filtering" },
-  { label: "Telemetry", route: "/workspace/telemetry", description: "Cross-source telemetry timeline" },
-  { label: "Attack Center", route: "/workspace/attack-center", description: "All modules in one control page" },
+  { label: "Overview", route: "/workspace", description: "Executive summary and source health", tag: "Mission" },
+  { label: "Incidents", route: "/workspace/incidents", description: "Incident queue and filtering", tag: "Cases" },
+  { label: "Telemetry", route: "/workspace/telemetry", description: "Cross-source telemetry timeline", tag: "Signals" },
+  { label: "Attack Center", route: "/workspace/attack-center", description: "All modules in one control page", tag: "Lab" },
 ];
 
 export const SOURCE_STYLES = {
@@ -104,4 +117,3 @@ export function sourceSummary(log) {
   }
   return `${log.Activity || "Security event"} on ${log.Computer || "host"}`;
 }
-

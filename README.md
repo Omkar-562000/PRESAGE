@@ -1,22 +1,27 @@
 # Presage
 
-Presage is a cybersecurity SIEM proof of concept that demonstrates real-time threat detection, incident generation, telemetry visibility, and automated response simulation through a modern React + Flask platform.
+> Cybersecurity SIEM proof of concept for real-time threat detection, incident generation, telemetry visibility, and automated response simulation.
 
-It is designed as a working SecOps demo model that can be presented, extended, and evolved into a future product such as **Presage WebShield** for customer-facing websites and web applications.
+Presage is a working SecOps demo platform built with a React frontend and Flask backend. It shows how security telemetry can be collected, analyzed, converted into incidents, and presented through a polished multi-page dashboard.
 
-## What This Project Does
+It is suitable for:
 
-Presage provides:
+- cybersecurity demonstrations
+- academic and internship presentations
+- product prototype reviews
+- future evolution into **Presage WebShield** for website security operations
 
-- centralized telemetry monitoring
+## Highlights
+
+- multi-source telemetry monitoring
 - modular attack simulation
-- rule-based attack detection
-- alert and incident creation
+- MITRE-aligned detection logic
+- incident creation and MTTD tracking
 - playbook-style automated response simulation
 - Windows Event Viewer ingestion
-- a multi-page React dashboard for live visibility
+- React + Tailwind multi-page dashboard
 
-Current implemented attack modules:
+## Implemented Attack Modules
 
 - Brute Force Login
 - Privilege Escalation
@@ -131,13 +136,13 @@ python -m pip install -r requirements.txt
 ### 2. Install frontend dependencies
 
 ```powershell
-D:\Nodejs\Nodejs\npm.cmd --prefix frontend install
+npm --prefix frontend install
 ```
 
-If `npm` is already available in your terminal path, you can also run:
+If your environment requires the explicit npm path, you can also run:
 
 ```powershell
-npm --prefix frontend install
+D:\Nodejs\Nodejs\npm.cmd --prefix frontend install
 ```
 
 ## Run Options
@@ -147,12 +152,6 @@ npm --prefix frontend install
 This is the recommended mode for demos, presentations, and full application use.
 
 #### Build the frontend
-
-```powershell
-D:\Nodejs\Nodejs\npm.cmd --prefix frontend run build
-```
-
-or:
 
 ```powershell
 npm --prefix frontend run build
@@ -260,14 +259,7 @@ Recommended presentation flow:
 
 ## Documentation
 
-Project documentation is available in the `docs/` folder, including:
-
-- project foundation and architecture
-- security brief
-- attack module integration and detection guide
-- system run guide and module workflow
-- current project positioning and moderator demo guide
-- Presage WebShield product roadmap
+See [docs/index.md](docs/index.md) for the full documentation map.
 
 ## Current Project Positioning
 
