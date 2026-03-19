@@ -1,0 +1,31 @@
+// Presage - KQL RULE
+// Attack Module: Brute Force Login
+// Severity: High
+// Table: SigninLogs
+// MITRE: TA0006 / T1110
+
+SigninLogs
+| where TimeGenerated >= ago(5m)
+| where ResultType != "0"
+| summarize
+    FailedAttempts = count(),
+    SourceIPs = make_set(IPAddress),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by UserPrincipalName, bin(TimeGenerated, 5m)
+| where FailedAttempts >= 5
+| extend
+    AlertSeverity = "High",
+    MITRETactic = "TA0006 - Credential Access",
+    MITRETechnique = "T1110 - Brute Force"
+| project
+    TimeGenerated,
+    UserPrincipalName,
+    FailedAttempts,
+    SourceIPs,
+    FirstSeen,
+    LastSeen,
+    AlertSeverity,
+    MITRETactic,
+    MITRETechnique
+

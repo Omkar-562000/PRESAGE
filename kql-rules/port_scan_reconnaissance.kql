@@ -1,0 +1,30 @@
+// Presage - KQL RULE
+// Attack Module: Port Scan / Reconnaissance
+// Severity: Medium
+// Table: NetworkEvents
+// MITRE: TA0043 / T1046
+
+NetworkEvents
+| where TimeGenerated >= ago(1m)
+| summarize
+    UniquePortsScanned = dcount(DstPort),
+    PortList = make_set(DstPort),
+    TargetIPs = make_set(DstIP),
+    PacketCount = count()
+    by SrcIP, bin(TimeGenerated, 1m)
+| where UniquePortsScanned >= 20
+| extend
+    AlertSeverity = "Medium",
+    MITRETactic = "TA0043 - Reconnaissance",
+    MITRETechnique = "T1046 - Network Service Discovery"
+| project
+    TimeGenerated,
+    SrcIP,
+    UniquePortsScanned,
+    PortList,
+    TargetIPs,
+    PacketCount,
+    AlertSeverity,
+    MITRETactic,
+    MITRETechnique
+

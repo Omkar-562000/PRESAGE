@@ -1,0 +1,33 @@
+// Presage - KQL RULE
+// Attack Module: Windows Failed Logon Burst
+// Severity: High
+// Table: WindowsEvent
+// MITRE: TA0006 / T1110
+
+WindowsEvent
+| where TimeGenerated >= ago(5m)
+| where EventID == 4625
+| summarize
+    FailedLogons = count(),
+    Hosts = make_set(Computer),
+    Channels = make_set(Channel),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by TargetUserName, bin(TimeGenerated, 5m)
+| where FailedLogons >= 5
+| extend
+    AlertSeverity = "High",
+    MITRETactic = "TA0006 - Credential Access",
+    MITRETechnique = "T1110 - Brute Force"
+| project
+    TimeGenerated,
+    TargetUserName,
+    FailedLogons,
+    Hosts,
+    Channels,
+    FirstSeen,
+    LastSeen,
+    AlertSeverity,
+    MITRETactic,
+    MITRETechnique
+

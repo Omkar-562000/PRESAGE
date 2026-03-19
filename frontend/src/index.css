@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(67, 214, 157, 0.12), transparent 30%),
+    radial-gradient(circle at right, rgba(110, 199, 255, 0.16), transparent 24%),
+    #08111f;
+}
+
+body {
+  @apply min-h-screen bg-ink bg-grid bg-[length:34px_34px] font-body text-slate-100 antialiased;
+}
+
+#root {
+  @apply min-h-screen;
+}

@@ -1,0 +1,24 @@
+// Presage - KQL RULE
+// Attack Module: Privilege Escalation
+// Severity: High
+// Table: AzureActivity
+// MITRE: TA0004 / T1078
+
+AzureActivity
+| where TimeGenerated >= ago(1h)
+| where OperationName == "Microsoft.Authorization/roleAssignments/write"
+| where ActivityStatus == "Succeeded"
+| extend
+    AlertSeverity = "High",
+    MITRETactic = "TA0004 - Privilege Escalation",
+    MITRETechnique = "T1078 - Valid Accounts"
+| project
+    TimeGenerated,
+    Caller,
+    ResourceGroup,
+    OperationName,
+    ActivityStatus,
+    AlertSeverity,
+    MITRETactic,
+    MITRETechnique
+
