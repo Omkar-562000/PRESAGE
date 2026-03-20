@@ -2,98 +2,108 @@
 
 > Cybersecurity SIEM proof of concept for real-time threat detection, incident generation, telemetry visibility, and automated response simulation.
 
-Presage is a working SecOps demo platform built with a React frontend and Flask backend. It shows how security telemetry can be collected, analyzed, converted into incidents, and presented through a polished multi-page dashboard.
+---
+
+## 🎬 Demo Video
+
+📽 **[Watch Full Demo on Google Drive](YOUR_DRIVE_LINK_HERE)**
+
+> Replace `YOUR_DRIVE_LINK_HERE` with your actual Google Drive share link after recording.
+
+The demo video covers: project explanation · workflow walkthrough · live attack simulation · code overview · workshop learning outcomes.
+
+---
+
+## Overview
+
+Presage is a working SecOps demo platform built with a React frontend and Flask backend. It shows how security telemetry can be collected, analysed, converted into incidents, and presented through a polished multi-page dashboard.
 
 It is suitable for:
 
-- cybersecurity demonstrations
-- academic and internship presentations
-- product prototype reviews
-- future evolution into **Presage WebShield** for website security operations
+- Cybersecurity demonstrations and internship presentations
+- Academic and product prototype reviews
+- Hands-on workshop delivery for students and developers
+- Future evolution into **Presage WebShield** for website security operations
+
+---
 
 ## Highlights
 
-- multi-source telemetry monitoring
-- modular attack simulation
-- MITRE-aligned detection logic
-- incident creation and MTTD tracking
-- playbook-style automated response simulation
-- Windows Event Viewer ingestion
-- React + Tailwind multi-page dashboard
+- Multi-source telemetry monitoring across 4 log types
+- 4 MITRE ATT&CK-aligned attack simulation modules
+- Real-time incident creation with MTTD measurement
+- Automated playbook response for High severity incidents
+- Windows Event Viewer integration via PowerShell
+- React + Tailwind multi-page dashboard — 7 pages
+- CLI demo mode via `python siem.py`
 
-## Implemented Attack Modules
+---
 
-- Brute Force Login
-- Privilege Escalation
-- Port Scan / Reconnaissance
-- Windows Failed Logon Burst
+## Attack Modules
+
+| Module | MITRE Technique | Severity | Detection Logic |
+|---|---|---|---|
+| Brute Force Login | T1110 — Credential Access | High | 5 failed logins per user in 5-minute window |
+| Privilege Escalation | T1078 — Privilege Escalation | High | Single roleAssignments/write event — immediate |
+| Port Scan / Reconnaissance | T1046 — Reconnaissance | Medium | 20 unique ports from same IP within 60 seconds |
+| Windows Failed Logon Burst | T1110 — Credential Access | High | 5 Event ID 4625 failures in 5-minute window |
+
+---
 
 ## Tech Stack
 
 ### Backend
-
-- Python
-- Flask
-- PowerShell integration for Windows event collection
-- Faker for simulated telemetry
+- Python 3.11+
+- Flask 3.x
+- Faker 24.x — realistic telemetry simulation
+- psutil — real system metrics
+- PowerShell integration for Windows Event Viewer
 
 ### Frontend
-
-- React
+- React 18
 - Vite
 - Tailwind CSS
 - React Router
 
-### Security Concepts Used
+### Security Concepts
+- SIEM-style log ingestion across 4 data sources
+- MITRE ATT&CK-aligned detection rules
+- Incident lifecycle modelling with MTTD measurement
+- Automated playbook response simulation
+- Windows security telemetry ingestion
 
-- SIEM-style log ingestion
-- MITRE ATT&CK-aligned detection mapping
-- incident lifecycle modeling
-- playbook response simulation
-- Windows security telemetry visibility
+---
 
 ## Project Structure
 
-```text
-PRESAGE-09/
-+-- backend/
-|   +-- app.py
-|   +-- config.py
-|   +-- siem_engine.py
-|   +-- attack_simulator.py
-|   +-- modules/
-|   +-- playbook/
-|   +-- routes/
-|   +-- services/
-|   +-- core/        # legacy/reference helpers
-+-- docs/
-+-- frontend/
-|   +-- package.json
-|   +-- src/
-|   |   +-- components/
-|   |   +-- hooks/
-|   |   +-- lib/
-|   |   +-- pages/
-|   +-- dist/        # generated after build
-+-- kql-rules/
-+-- app.py
-+-- siem.py
-+-- requirements.txt
+```
+PRESAGE/
+├── backend/
+│   ├── app.py                  Flask application and routes
+│   ├── config.py               Configuration settings
+│   ├── siem_engine.py          Detection engine and incident model
+│   ├── attack_simulator.py     Attack simulation orchestration
+│   ├── modules/                Detection rule modules
+│   ├── playbook/               Automated response playbooks
+│   ├── routes/                 API route handlers
+│   └── services/               Business logic services
+├── docs/
+│   ├── index.md                Documentation map
+│   └── workshop.md             Workshop delivery guide
+├── frontend/
+│   ├── package.json
+│   └── src/
+│       ├── components/         Reusable UI components
+│       ├── hooks/              Custom React hooks
+│       ├── lib/                Utilities
+│       └── pages/              Dashboard pages
+├── kql-rules/                  Microsoft Sentinel KQL detection queries
+├── app.py                      Root entrypoint
+├── siem.py                     CLI demo mode
+└── requirements.txt            Python dependencies
 ```
 
-## Active Runtime
-
-Main runtime files:
-
-- `app.py` - root entrypoint for the integrated app
-- `backend/app.py` - Flask backend application
-- `backend/siem_engine.py` - SIEM engine and incident model
-- `backend/attack_simulator.py` - attack simulation orchestration
-- `frontend/` - React dashboard
-
-Legacy/reference area:
-
-- `backend/core/` is retained only for older helper and reporting code and is not part of the active web runtime.
+---
 
 ## Prerequisites
 
@@ -102,184 +112,175 @@ Before running Presage locally, make sure you have:
 - Python 3.11+ installed
 - Node.js 18+ installed
 - npm installed
-- Windows PowerShell available
-- Git installed if you want to clone the repository
+- Git installed
+- Windows PowerShell available (Windows only — enables real Event Viewer ingestion)
 
-Recommended:
-
-- a Windows machine, because the project can collect real Windows Event Viewer logs using PowerShell
-
-## How To Clone The Repository
-
-Replace the repository URL with your actual GitHub repository URL.
-
-```powershell
-git clone <your-repository-url>
-cd PRESAGE-09
-```
-
-Example:
-
-```powershell
-git clone https://github.com/your-username/presage.git
-cd PRESAGE-09
-```
+---
 
 ## Installation
 
-### 1. Install backend dependencies
+### 1. Clone the repository
 
-```powershell
+```bash
+git clone https://github.com/Omkar-562000/PRESAGE
+cd PRESAGE
+```
+
+### 2. Install backend dependencies
+
+```bash
 python -m pip install -r requirements.txt
 ```
 
-### 2. Install frontend dependencies
+### 3. Install frontend dependencies
 
-```powershell
+```bash
 npm --prefix frontend install
 ```
 
-If your environment requires the explicit npm path, you can also run:
-
-```powershell
-D:\Nodejs\Nodejs\npm.cmd --prefix frontend install
-```
+---
 
 ## Run Options
 
-### Option 1: Integrated App Mode
+### Option 1 — Integrated App Mode (recommended for demos)
 
-This is the recommended mode for demos, presentations, and full application use.
+This is the recommended mode for demonstrations and presentations.
 
-#### Build the frontend
+#### Step 1: Build the frontend
 
-```powershell
+```bash
 npm --prefix frontend run build
 ```
 
-#### Start the backend
+#### Step 2: Start the backend
 
-```powershell
+```bash
 python app.py
 ```
 
-#### Open the app
+#### Step 3: Open the app
 
-```text
+```
 http://localhost:5000
 ```
 
 What happens in this mode:
+- Flask starts the backend and serves the built React frontend
+- Background telemetry generation starts automatically
+- Windows event collection starts automatically (Windows machines only)
+- The full 7-page PRESAGE dashboard is available from one URL
 
-- Flask starts the backend
-- the built React frontend is served from `frontend/dist`
-- background telemetry starts automatically
-- Windows event collection starts automatically
-- the full Presage UI is available from one URL
+---
 
-### Option 2: Frontend Development Mode
+### Option 2 — Frontend Development Mode
 
 Use this when actively editing the React UI.
 
 #### Terminal 1: Start backend
 
-```powershell
+```bash
 python app.py
 ```
 
 #### Terminal 2: Start frontend dev server
 
-```powershell
+```bash
 cd frontend
 npm run start
 ```
 
-#### Open the frontend dev app
+#### Open the dev app
 
-```text
+```
 http://localhost:5173
 ```
 
-What happens in this mode:
+---
 
-- Flask still serves the backend APIs on port `5000`
-- Vite serves the React frontend on port `5173`
-- React changes update with hot reload during development
+### Option 3 — CLI Demo Mode
 
-### Optional CLI Demo Mode
-
-```powershell
+```bash
 python siem.py
 ```
 
-This starts the same backend and gives you a terminal menu for launching attack simulations and saving a report snapshot.
+Starts the platform with a terminal menu for triggering attacks, viewing incidents, and saving report snapshots. Useful for live command-line demonstrations.
 
-## How To Test The Project Quickly
+---
 
-### Backend health test
+## Quick Health Check
 
-```powershell
-python -c "from app import app; c=app.test_client(); print(c.get('/api/health').status_code); print(c.get('/api/state').status_code); print(c.get('/api/config').status_code)"
+```bash
+python -c "from app import app; c=app.test_client(); print(c.get('/api/health').status_code); print(c.get('/api/state').status_code)"
 ```
 
-Expected result:
+Expected output: `200` for each endpoint.
 
-- `200`
-- `200`
-- `200`
+---
 
-### Frontend build test
+## Demo Flow
 
-```powershell
-npm --prefix frontend run build
-```
+Recommended live demonstration sequence:
 
-### Manual application test
+1. Open the landing page — introduce PRESAGE
+2. Navigate to Overview — show live KPI stats and log stream
+3. Open Telemetry — prove logs are actively being ingested
+4. Go to Attack Center — trigger Brute Force Login
+5. Open Incidents — show incident with MTTD in seconds
+6. Show MTTD comparison — before: 4–6 hours, after: seconds
+7. Trigger remaining 3 modules — Privilege Escalation, Port Scan, Windows Logon Burst
+8. Download the incident report from Reports page
 
-1. Open the landing page.
-2. Enter the workspace.
-3. Open `Overview` and `Telemetry`.
-4. Go to `Attack Center`.
-5. Trigger one attack module.
-6. Open `Incidents`.
-7. Confirm that a new incident appears.
-8. For high-severity incidents, confirm the status changes to `Under Investigation`.
+---
 
-## What To Show In A Demo
+## Workshop Delivery
 
-Recommended presentation flow:
+See [`docs/workshop.md`](docs/workshop.md) for the full workshop delivery guide.
 
-1. Open the landing page and introduce Presage.
-2. Open the workspace and explain the dashboard layout.
-3. Show the `Overview` page to explain telemetry and incident visibility.
-4. Show the `Telemetry` page to prove logs are actively being processed.
-5. Trigger one attack from `Attack Center`.
-6. Open `Incidents` and show the resulting incident.
-7. Explain the playbook response and MTTD value.
+**Quick summary:**
+- **Target audience:** CS/IT students, junior developers, security interns
+- **Duration:** 4–6 hours (half-day workshop)
+- **What learners build:** A fully working SIEM platform with 4 MITRE-mapped detection modules and live dashboard
+- **Prerequisites:** Basic Python and JavaScript knowledge
+
+---
 
 ## Documentation
 
-See [docs/index.md](docs/index.md) for the full documentation map.
+- [`docs/index.md`](docs/index.md) — full documentation map
+- [`docs/workshop.md`](docs/workshop.md) — workshop delivery guide
+- [`kql-rules/`](kql-rules/) — Microsoft Sentinel KQL detection queries
 
-## Current Project Positioning
+---
 
-Presage should currently be presented as:
+## Project Positioning
 
-**a working SIEM and SecOps proof of concept**
+Presage should be presented as **a working SIEM and SecOps proof of concept** suitable for:
 
-It is suitable for:
+- Cybersecurity demonstrations and academic presentations
+- Internship project reviews
+- Hands-on workshop delivery
+- Foundation for future expansion into Presage WebShield
 
-- cybersecurity demonstrations
-- academic and internship presentations
-- product prototype reviews
-- future expansion into a real web security product
+It is not positioned as a full production enterprise SIEM deployment.
 
-It should not be presented as a full production enterprise SIEM deployment.
+---
 
 ## Future Direction
 
-Presage can evolve into **Presage WebShield**, a website-focused cybersecurity monitoring and response platform for business websites and web applications.
+Presage can evolve into **Presage WebShield** — a website-focused cybersecurity monitoring and response platform for business websites and web applications.
 
-## License / Usage Note
+---
 
-Add your preferred license here if you plan to publish the repository publicly.
+## License
+
+MIT License — free to use, modify, and redistribute.
+
+See [LICENSE](LICENSE) for full terms.
+
+---
+
+## Author
+
+**Omkar Sakhalkar** — Cybersecurity SecOps Intern, Wissen Infotech
+
+GitHub: [github.com/Omkar-562000/PRESAGE](https://github.com/Omkar-562000/PRESAGE)
