@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
+import { MetricBarChart } from "../components/MetricBarChart";
 import { SectionCard } from "../components/SectionCard";
 import { SourceHealthGrid } from "../components/SourceHealthGrid";
+import { SparklinePanel } from "../components/SparklinePanel";
+import { ThreatDonut } from "../components/ThreatDonut";
 import { formatIncidentTime, SOURCE_STYLES, sourceSummary } from "../lib/ui";
 
 const TABLES = ["SigninLogs", "SecurityEvent", "WindowsEvent", "AzureActivity", "NetworkEvents"];
@@ -15,10 +18,64 @@ export function TelemetryPage({ siem }) {
     return (siem.recent_logs || []).filter((log) => log._table === selectedSource);
   }, [selectedSource, siem.recent_logs]);
 
+  const sourceVolume = useMemo(
+    () =>
+      TABLES.map((table) => ({
+        label: table,
+        value: siem.logs_by_table?.[table]?.length || 0,
+        caption: `${table} recent records`,
+      })),
+    [siem.logs_by_table],
+  );
+
+  const sourceHeartbeat = useMemo(
+    () =>
+      (siem.source_health || []).map((source, index) => ({
+        label: `S${index + 1}`,
+        value: source.recent_events,
+      })),
+    [siem.source_health],
+  );
+
+  const telemetrySegments = useMemo(
+    () =>
+      TABLES.map((table, index) => ({
+        label: table,
+        value: siem.logs_by_table?.[table]?.length || 0,
+        color: ["#73c7ff", "#f3a941", "#22d3ee", "#e879f9", "#4ad4a0"][index],
+      })),
+    [siem.logs_by_table],
+  );
+
   return (
     <div className="space-y-6">
       <SectionCard title="Source Health" subtitle="Quick source monitoring, heartbeat, and recent log volume.">
         <SourceHealthGrid sources={siem.source_health || []} />
+      </SectionCard>
+
+      <SectionCard title="Telemetry Analytics" subtitle="Visual SIEM telemetry diagnostics for connector share, event volume, and source heartbeat.">
+        <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
+          <ThreatDonut
+            title="Connector Share"
+            subtitle="Distribution of the currently retained event feed across all log sources."
+            segments={telemetrySegments}
+            totalLabel="Recent logs"
+          />
+          <div className="grid gap-5">
+            <MetricBarChart
+              title="Source Event Volume"
+              subtitle="Relative activity level by telemetry source in the current polling window."
+              items={sourceVolume}
+              valueFormatter={(value) => `${value} evts`}
+            />
+            <SparklinePanel
+              title="Heartbeat Trace"
+              subtitle="Source-by-source event pulse across the current telemetry snapshot."
+              points={sourceHeartbeat}
+              tone="#73c7ff"
+            />
+          </div>
+        </div>
       </SectionCard>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

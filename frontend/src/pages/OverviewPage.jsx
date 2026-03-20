@@ -1,14 +1,63 @@
 import { Link } from "react-router-dom";
-import { useDeferredValue } from "react";
+import { useDeferredValue, useMemo } from "react";
 import { AlertTrendPanel } from "../components/AlertTrendPanel";
+import { MetricBarChart } from "../components/MetricBarChart";
 import { SectionCard } from "../components/SectionCard";
+import { SparklinePanel } from "../components/SparklinePanel";
 import { SourceHealthGrid } from "../components/SourceHealthGrid";
 import { StatCard } from "../components/StatCard";
+import { ThreatDonut } from "../components/ThreatDonut";
 import { TopEntitiesPanel } from "../components/TopEntitiesPanel";
 import { formatIncidentTime, SEVERITY_STYLES, SOURCE_STYLES, sourceSummary } from "../lib/ui";
 
 export function OverviewPage({ siem }) {
   const deferredLogs = useDeferredValue(siem.recent_logs);
+  const severitySegments = useMemo(
+    () => [
+      { label: "High", value: siem.alert_trend?.by_severity?.High || 0, color: "#ff6e7d" },
+      { label: "Medium", value: siem.alert_trend?.by_severity?.Medium || 0, color: "#f3a941" },
+      { label: "Low", value: siem.alert_trend?.by_severity?.Low || 0, color: "#4ad4a0" },
+    ],
+    [siem.alert_trend],
+  );
+  const sourceVolume = useMemo(
+    () =>
+      (siem.source_health || []).map((source) => ({
+        label: source.source,
+        value: source.recent_events,
+        caption: source.status === "Healthy" ? `Last seen ${formatIncidentTime(source.last_seen)}` : "Awaiting fresh events",
+        tone: source.status === "Healthy" ? "from-sky/80 via-cobalt/70 to-mint/70" : "from-amber/70 via-gold/60 to-rose/60",
+      })),
+    [siem.source_health],
+  );
+  const incidentStatus = useMemo(() => {
+    const counts = (siem.incidents || []).reduce((acc, incident) => {
+      const key = incident.Status || "Unknown";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([label, value]) => ({
+      label,
+      value,
+      tone: label === "Under Investigation" ? "from-gold/80 via-amber/70 to-rose/60" : "from-sky/80 via-cobalt/70 to-mint/70",
+    }));
+  }, [siem.incidents]);
+  const mttdPoints = useMemo(
+    () =>
+      (siem.mttd?.records || []).slice(-8).map((record, index) => ({
+        label: `R${index + 1}`,
+        value: Number(record.mttd_seconds) || 0,
+      })),
+    [siem.mttd],
+  );
+  const logMomentum = useMemo(
+    () =>
+      (siem.recent_logs || []).slice(0, 10).map((log, index) => ({
+        label: log._table || `Signal ${index + 1}`,
+        value: Math.max(10 - index, 1),
+      })),
+    [siem.recent_logs],
+  );
 
   return (
     <>
@@ -56,6 +105,42 @@ export function OverviewPage({ siem }) {
         <SourceHealthGrid sources={siem.source_health || []} />
       </SectionCard>
 
+      <SectionCard title="Security Command Center" subtitle="Professional SIEM analytics focused on severity pressure, connector throughput, response status, and detection performance.">
+        <div className="grid gap-5 xl:grid-cols-[1.02fr_0.98fr]">
+          <ThreatDonut
+            title="Threat Distribution"
+            subtitle="Current incident severity mix across the monitoring session."
+            segments={severitySegments}
+            totalLabel="Incident total"
+          />
+          <div className="grid gap-5">
+            <MetricBarChart
+              title="Connector Ingestion Volume"
+              subtitle="Recent event volume by telemetry source."
+              items={sourceVolume}
+              valueFormatter={(value) => `${value} evts`}
+              emptyLabel="No source traffic yet."
+            />
+            <div className="grid gap-5 lg:grid-cols-2">
+              <MetricBarChart
+                title="Incident Pipeline"
+                subtitle="How many cases are sitting in each operational state."
+                items={incidentStatus}
+                valueFormatter={(value) => `${value}`}
+                emptyLabel="No incident states available yet."
+              />
+              <SparklinePanel
+                title="MTTD Performance"
+                subtitle="Recent detection latency trend from attack trigger to alert."
+                points={mttdPoints}
+                tone="#4ad4a0"
+                valueSuffix="s"
+              />
+            </div>
+          </div>
+        </div>
+      </SectionCard>
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard
           title="Latest Incidents"
@@ -91,6 +176,38 @@ export function OverviewPage({ siem }) {
           </div>
         </SectionCard>
       </div>
+
+      <SectionCard title="Telemetry Momentum" subtitle="Quick pulse on the freshest cross-source signal flow reaching the analyst console.">
+        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+          <MetricBarChart
+            title="Recent Signal Priority"
+            subtitle="A visual ordering of the latest telemetry reaching the console feed."
+            items={logMomentum}
+            valueFormatter={(value) => `P${value}`}
+            emptyLabel="No recent log activity detected."
+          />
+          <div className="rounded-[28px] border border-white/8 bg-slate-950/45 p-5">
+            <p className="text-[10px] uppercase tracking-[0.28em] text-steel">Analyst Notes</p>
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl border border-rose/20 bg-rose/10 p-4">
+                <p className="text-xs uppercase tracking-[0.22em] text-rose">Exposure</p>
+                <p className="mt-3 text-3xl font-semibold text-white">{siem.stats.high_severity}</p>
+                <p className="mt-2 text-sm text-slate-300">High severity cases requiring immediate validation.</p>
+              </div>
+              <div className="rounded-2xl border border-sky/20 bg-sky/10 p-4">
+                <p className="text-xs uppercase tracking-[0.22em] text-sky">Detection Depth</p>
+                <p className="mt-3 text-3xl font-semibold text-white">{siem.stats.total_alerts}</p>
+                <p className="mt-2 text-sm text-slate-300">Alerts created by the active detection catalog.</p>
+              </div>
+              <div className="rounded-2xl border border-mint/20 bg-mint/10 p-4">
+                <p className="text-xs uppercase tracking-[0.22em] text-mint">Connector Reach</p>
+                <p className="mt-3 text-3xl font-semibold text-white">{siem.stats.sources_active}</p>
+                <p className="mt-2 text-sm text-slate-300">Sources currently contributing to the workspace.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SectionCard>
 
       <SectionCard
         title="Live Log Stream"

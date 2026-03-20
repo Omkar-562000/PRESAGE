@@ -1,10 +1,14 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, Link } from "react-router-dom";
 import { useState } from "react";
+import iconImage from "../assets/images/icon.png";
+import { getReportJsonUrl, getReportPdfUrl } from "../lib/api";
 import { Sidebar } from "./Sidebar";
 import { APP_BRAND, FEATURE_PAGES } from "../lib/ui";
 
 export function WorkspaceShell({ siem }) {
   const [query, setQuery] = useState("");
+  const reportPdfUrl = getReportPdfUrl();
+  const reportJsonUrl = getReportJsonUrl();
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[1680px] gap-5 px-4 py-5 sm:px-6 lg:px-8">
@@ -17,7 +21,15 @@ export function WorkspaceShell({ siem }) {
           <div className="pointer-events-none absolute bottom-0 left-10 h-24 w-56 rounded-full bg-gold/10 blur-3xl" />
           <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
             <div className="max-w-4xl">
-              <p className="text-[11px] uppercase tracking-[0.36em] text-mint">{APP_BRAND.motto}</p>
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-white/10 bg-white/5 p-3 shadow-float">
+                  <img src={iconImage} alt="Presage logo" className="h-full w-full object-contain" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.36em] text-mint">{APP_BRAND.motto}</p>
+                  <p className="mt-2 font-display text-3xl text-white">{APP_BRAND.name}</p>
+                </div>
+              </div>
               <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[0.95] text-white xl:text-6xl">Presage Cyber Defense Console</h1>
               <p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">
                 A refined operations workspace for live telemetry, incident review, attack simulation, and executive-friendly security storytelling. Every view is arranged like a mission console rather than a simple academic dashboard.
@@ -36,6 +48,35 @@ export function WorkspaceShell({ siem }) {
                 <p className="text-xs uppercase tracking-[0.22em] text-steel">Time</p>
                 <p className="mt-3 text-sm text-white">{siem.clock} IST</p>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 border-t border-white/8 pt-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Moderator Mode</p>
+              <p className="mt-2 text-sm text-slate-300">After each manual attack, download a polished SIEM report instantly from the dashboard.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={reportPdfUrl}
+                className="rounded-full border border-gold/25 bg-gradient-to-r from-gold/20 to-amber/15 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:border-gold/40 hover:bg-gold/20"
+              >
+                Download PDF Report
+              </a>
+              <a
+                href={reportJsonUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:border-sky/30 hover:bg-sky/10"
+              >
+                Open JSON Report
+              </a>
+              <Link
+                to="/workspace/reports"
+                className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:border-sky/30 hover:bg-sky/10"
+              >
+                Open Report Center
+              </Link>
             </div>
           </div>
         </header>

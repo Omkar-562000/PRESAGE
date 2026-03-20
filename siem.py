@@ -26,7 +26,8 @@ from rich.table import Table
 
 from app import app, start_background_traffic
 from backend.attack_simulator import attack_brute_force, attack_port_scan, attack_privilege_escalation, attack_windows_failed_logon
-from backend.siem_engine import CONFIG, get_incidents, get_mttd_summary, get_stats
+from backend.services.report_service import build_report_payload, generate_pdf_report
+from backend.siem_engine import get_incidents
 
 console = Console()
 
@@ -105,17 +106,13 @@ def show_incidents():
 
 def save_report_snapshot():
     os.makedirs("reports", exist_ok=True)
-    payload = {
-        "organization": CONFIG["organization"],
-        "client": CONFIG["client"],
-        "summary": get_stats(),
-        "incidents": get_incidents(),
-        "mttd_summary": get_mttd_summary(),
-    }
+    payload = build_report_payload()
     output_path = os.path.join("reports", "incident_report.json")
     with open(output_path, "w", encoding="utf-8") as file:
         json.dump(payload, file, indent=2)
-    console.print(f"\n[bold green]Report saved to {output_path}[/bold green]")
+    pdf_path = generate_pdf_report(os.path.join("reports", "incident_report.pdf"))
+    console.print(f"\n[bold green]JSON report saved to {output_path}[/bold green]")
+    console.print(f"[bold green]PDF report saved to {pdf_path}[/bold green]")
 
 
 def run_attack(choice: str):

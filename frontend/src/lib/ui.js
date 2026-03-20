@@ -67,6 +67,7 @@ export const FEATURE_PAGES = [
   { label: "Overview", route: "/workspace", description: "Executive summary and source health", tag: "Mission" },
   { label: "Incidents", route: "/workspace/incidents", description: "Incident queue and filtering", tag: "Cases" },
   { label: "Telemetry", route: "/workspace/telemetry", description: "Cross-source telemetry timeline", tag: "Signals" },
+  { label: "Reports", route: "/workspace/reports", description: "Structured exports and report summary", tag: "Export" },
   { label: "Attack Center", route: "/workspace/attack-center", description: "All modules in one control page", tag: "Lab" },
 ];
 

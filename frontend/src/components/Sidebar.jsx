@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import iconImage from "../assets/images/icon.png";
 import { APP_BRAND, ATTACKS, FEATURE_PAGES, SEVERITY_STYLES } from "../lib/ui";
 
 function NavGroup({ title, items, query }) {
@@ -55,10 +56,10 @@ export function Sidebar({ query, setQuery }) {
       <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-sky/60 to-transparent" />
       <Link to="/" className="rounded-[26px] border border-white/8 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-shell/80 p-5 transition hover:border-sky/35 hover:bg-slate-950">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/20 via-cobalt/15 to-mint/10 text-lg font-semibold text-white shadow-float animate-pulse-glow">
-            PR
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/20 via-cobalt/15 to-mint/10 p-2 shadow-float animate-pulse-glow">
+            <img src={iconImage} alt="Presage icon" className="h-full w-full object-contain" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="font-display text-2xl text-white">{APP_BRAND.name}</p>
             <p className="mt-1 text-sm text-steel">{APP_BRAND.subtitle}</p>
           </div>

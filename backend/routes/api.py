@@ -3,11 +3,12 @@ from __future__ import annotations
 import datetime as dt
 import threading
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 
 from backend.attack_simulator import attack_brute_force, attack_port_scan, attack_privilege_escalation, attack_windows_failed_logon
+from backend.services.report_service import build_report_payload, generate_pdf_report
 from backend.services.state_service import get_config_payload, get_state_payload
-from backend.siem_engine import CONFIG, get_alerts, get_incidents, get_logs, get_mttd_summary, get_stats
+from backend.siem_engine import get_alerts, get_incidents, get_logs, get_mttd_summary, get_stats
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -87,14 +88,16 @@ def api_windows_failed_logon():
 
 @api_bp.get("/report")
 def api_report():
-    return jsonify(
-        {
-            "organization": CONFIG["organization"],
-            "client": CONFIG["client"],
-            "generated": dt.datetime.now().isoformat(),
-            "summary": get_stats(),
-            "incidents": get_incidents(),
-            "mttd_summary": get_mttd_summary(),
-        }
+    return jsonify(build_report_payload())
+
+
+@api_bp.get("/report/pdf")
+def api_report_pdf():
+    pdf_path = generate_pdf_report()
+    return send_file(
+        pdf_path,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=pdf_path.name,
     )
 
