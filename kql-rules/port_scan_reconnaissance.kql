@@ -1,8 +1,8 @@
-// Presage - KQL RULE
-// Attack Module: Port Scan / Reconnaissance
+// Rule: Port Scan / Network Reconnaissance
+// MITRE: T1046 - Network Service Discovery
 // Severity: Medium
-// Table: NetworkEvents
-// MITRE: TA0043 / T1046
+// Threshold: 20 unique ports from same IP in 60 seconds
+// Network event logs are been used in these 
 
 NetworkEvents
 | where TimeGenerated >= ago(1m)

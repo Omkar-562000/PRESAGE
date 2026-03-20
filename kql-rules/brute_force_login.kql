@@ -1,8 +1,8 @@
-// Presage - KQL RULE
-// Attack Module: Brute Force Login
+// Rule: Brute Force Login Attack Detection
+// MITRE: T1110 - Credential Access
 // Severity: High
-// Table: SigninLogs
-// MITRE: TA0006 / T1110
+// Threshold: 5 failed logins per user in 5 minutes
+// SigniLogs are been used here 
 
 SigninLogs
 | where TimeGenerated >= ago(5m)

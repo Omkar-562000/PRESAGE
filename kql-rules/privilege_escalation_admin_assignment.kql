@@ -1,8 +1,8 @@
-// Presage - KQL RULE
-// Attack Module: Privilege Escalation
+// Rule: Privilege Escalation - Admin Role Assigned
+// MITRE: T1078 - Valid Accounts
 // Severity: High
-// Table: AzureActivity
-// MITRE: TA0004 / T1078
+// Trigger: Single event - immediate fire
+//AzureActivity based logs are been created and used 
 
 AzureActivity
 | where TimeGenerated >= ago(1h)

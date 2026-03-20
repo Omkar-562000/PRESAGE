@@ -1,8 +1,8 @@
-// Presage - KQL RULE
-// Attack Module: Windows Failed Logon Burst
+// Rule: Windows Failed Logon Burst
+// MITRE: T1110 - Brute Force (Windows variant)
 // Severity: High
-// Table: WindowsEvent
-// MITRE: TA0006 / T1110
+// Threshold: 5 Event ID 4625 failures per account in 5 minutes
+// Windows based logs are been generated and used 
 
 WindowsEvent
 | where TimeGenerated >= ago(5m)
